@@ -9,8 +9,6 @@ import pandas as pd
 db = sqlite3.connect('Methods.db')
 cur = db.cursor()
 
-data = pd.DataFrame(columns=['content', 'author', 'timestamp'])
-
 
 client = discord.Client()
 
@@ -112,6 +110,7 @@ async def on_message(message):
 
 
 def log(message):
+    data = pd.DataFrame(columns=['content', 'author', 'timestamp'])
     if message.content.startswith('$log'):
         print(message.content)
 
