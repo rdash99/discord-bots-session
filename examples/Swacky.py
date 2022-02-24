@@ -114,8 +114,15 @@ def log(message):
     if message.content.startswith('$log'):
         print(message.content)
 
-    data = data.append({'content': message.content, 'author': message.author.name,
-                       'timestamp': message.created_at}, ignore_index=True)
+    try:
+        df = pd.read_csv('log.csv')
+    except:
+        pass
+
+    # print(df)
+
+    data = df.append({'content': message.content, 'author': message.author.name,
+                      'timestamp': message.created_at}, ignore_index=True)
 
     data.to_csv('log.csv', index=False)
 
