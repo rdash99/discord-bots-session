@@ -15,6 +15,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
     if message.author.bot:
         return
 
@@ -25,7 +26,9 @@ async def on_message(message):
         processLog()
         await message.reply("Processed Log")
         return
-    log(message)
+
+    if not isinstance(message.channel, discord.DMChannel):
+        log(message)
 
 
 def log(message):
