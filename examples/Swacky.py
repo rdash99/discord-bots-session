@@ -1,13 +1,8 @@
 # Import the pycord library into your runtime.
 import discord
 from datetime import datetime
-import time
-import requests
-import sqlite3
 import os
 import pandas as pd
-db = sqlite3.connect('Methods.db')
-cur = db.cursor()
 
 
 client = discord.Client()
