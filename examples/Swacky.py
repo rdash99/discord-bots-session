@@ -110,6 +110,7 @@ async def on_message(message):
 
 
 def log(message):
+    createFile()
     data = pd.DataFrame(columns=['content', 'author', 'timestamp'])
     if message.content.startswith('$log'):
         print(message.content)
@@ -125,6 +126,12 @@ def log(message):
                       'timestamp': message.created_at}, ignore_index=True)
 
     data.to_csv('log.csv', index=False)
+
+
+def createFile():
+    if not os.path.exists('log.csv'):
+        with open('log.csv', 'w') as f:
+            f.write('content,author,timestamp\n')
 
 
 def getToken():
