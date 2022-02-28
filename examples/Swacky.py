@@ -21,11 +21,11 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    log(message)
-
     if message.content.startswith('#swack process_log'):
         processLog()
         await message.reply("Processed Log")
+        return
+    log(message)
 
 
 def log(message):
