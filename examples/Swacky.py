@@ -30,7 +30,8 @@ async def on_message(message):
         return
 
     if message.content.startswith('#swack process_log'):
-        processLog()
+        async with message.channel.typing():
+            processLog()
         await message.reply("Processed Log")
         await message.reply(file=discord.File('Swack.pdf'))
         await message.reply(file=discord.File('log.csv'))
