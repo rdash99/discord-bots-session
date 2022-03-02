@@ -3,6 +3,8 @@ import discord
 from datetime import datetime
 import os
 import pandas as pd
+from fpdf import FPDF
+import random
 
 
 client = discord.Client()
@@ -11,6 +13,11 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+    # channel id for the sandbox channel
+    channel = client.get_channel(519591466058907669)
+    # await channel.send('This is sent every time the bot is started, sorry if it gets annoying during testing :)')
+    # await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
+    # await channel.send('Please do not send any messages which contain emojis as this can cause issues when generating the output pdf')
 
 
 @client.event
@@ -25,6 +32,8 @@ async def on_message(message):
     if message.content.startswith('#swack process_log'):
         processLog()
         await message.reply("Processed Log")
+        await message.reply(file=discord.File('Swack.pdf'))
+        await message.reply(file=discord.File('log.csv'))
         return
 
     if not isinstance(message.channel, discord.DMChannel):
@@ -56,12 +65,12 @@ def createFile():
 
 def processLog():
     df = pd.read_csv('log.csv')
-    print(len(df))
+    """ print(len(df))
     for i in range(len(df)):
         print(df.iloc[i]['content'])
         print(df.iloc[i]['author'])
         print(df.iloc[i]['timestamp'])
-        print("\n")
+        print("\n") """
 
     authors = []
     strings = []
@@ -73,6 +82,36 @@ def processLog():
 
     print(authors)
     print(strings)
+
+    pdf = FPDF()
+
+    pdf.add_page()
+
+    # set style and size of font
+    # that you want in the pdf
+    pdf.set_font("Arial", size=15)
+
+    random.shuffle(authors)
+
+    contributors = "Contributors: "
+
+    outString = ""
+    for i in range(len(authors)):
+        outString += strings[i] + ". " + "\n"
+        contributors += authors[i] + ", "
+
+    # create a cell
+    pdf.cell(200, 10, txt=outString,
+             ln=1, align='C')
+
+    # add another cell
+    pdf.cell(200, 10, txt=contributors,
+             ln=2, align='C')
+
+    pdf.image(name='swan_hack_logo.png', x=10, y=10, w=25, h=25)
+
+    # save the pdf with name .pdf
+    pdf.output("Swack.pdf")
 
 
 def getToken():
