@@ -15,9 +15,9 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
     # channel id for the sandbox channel
     channel = client.get_channel(519591466058907669)
-    await channel.send('This is sent every time the bot is started, sorry if it gets annoying during testing :)')
-    await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
-    await channel.send('Please do not send any messages which contain emojis as this can cause issues when generating the output pdf')
+    # await channel.send('This is sent every time the bot is started, sorry if it gets annoying during testing :)')
+    # await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
+    # await channel.send('Please do not send any messages which contain emojis as this can cause issues when generating the output pdf')
 
 
 @client.event
@@ -34,7 +34,7 @@ async def on_message(message):
             processLog()
         await message.reply("Processed Log")
         await message.reply(file=discord.File('Swack.pdf'))
-        await message.reply(file=discord.File('log.csv'))
+        # await message.reply(file=discord.File('log.csv'))
         return
 
     if not isinstance(message.channel, discord.DMChannel):
@@ -98,18 +98,19 @@ def processLog():
 
     outString = ""
     for i in range(len(authors)):
-        outString += strings[i] + ". " + "\n"
+        outString += strings[i] + ". "
         contributors += authors[i] + ", "
+    outString += " \n"
 
     # create a cell
-    pdf.cell(200, 10, txt=outString,
-             ln=1, align='C')
+    pdf.multi_cell(200, 10, txt=outString,
+                   align='L', border=0)
 
     # add another cell
-    pdf.cell(200, 10, txt=contributors,
-             ln=2, align='C')
+    pdf.multi_cell(200, 10, txt=contributors,
+                   align='J')
 
-    pdf.image(name='swan_hack_logo.png', x=10, y=10, w=25, h=25)
+    pdf.image(name='swan_hack_logo.png', w=25, h=25)
 
     # save the pdf with name .pdf
     pdf.output("Swack.pdf")
