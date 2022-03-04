@@ -55,6 +55,13 @@ def log(message):
     data = df.append({'content': message.content, 'author': message.author.name,
                       'timestamp': message.created_at}, ignore_index=True)
 
+    # Remove emojis from the data
+    data = data.astype(str).apply(lambda x: x.str.encode(
+        'ascii', 'ignore').str.decode('ascii'))
+
+    # Remove double spaces from the data
+    data['content'] = data['content'].str.replace(' {2,}', ' ', regex=True)
+
     data.to_csv('log.csv', index=False)
 
 
