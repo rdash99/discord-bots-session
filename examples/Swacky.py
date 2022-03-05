@@ -1,4 +1,3 @@
-# Import the pycord library into your runtime.
 import discord
 from datetime import datetime
 import os
@@ -56,11 +55,11 @@ def log(message):
     data = df.append({'content': message.content, 'author': message.author.name,
                       'timestamp': message.created_at}, ignore_index=True)
 
-    # Remove emojis from the data
+    # Remove emojis from the messages only
     data['content'] = data['content'].apply(lambda x: x.encode(
         'ascii', 'ignore').decode('ascii'))
 
-    # Remove double spaces from the data
+    # Remove double spaces from the messages
     data['content'] = data['content'].str.replace(' {2,}', ' ', regex=True)
 
     data.to_csv('log.csv', index=False)
@@ -74,12 +73,6 @@ def createFile():
 
 def processLog():
     df = pd.read_csv('log.csv')
-    """ print(len(df))
-    for i in range(len(df)):
-        print(df.iloc[i]['content'])
-        print(df.iloc[i]['author'])
-        print(df.iloc[i]['timestamp'])
-        print("\n") """
 
     authors = []
     strings = []
@@ -97,7 +90,6 @@ def processLog():
     pdf.add_page()
 
     # set style and size of font
-    # that you want in the pdf
     pdf.set_font("Arial", size=15)
 
     random.shuffle(authors)
@@ -113,17 +105,15 @@ def processLog():
             contributors += authors[i] + ", "
     outString += " \n"
 
-    # create a cell
     pdf.multi_cell(200, 10, txt=outString,
                    align='L')
 
-    # add another cell
     pdf.multi_cell(200, 10, txt=contributors,
                    align='L')
 
     pdf.image(name='swan_hack_logo.png', w=25, h=25)
 
-    # save the pdf with name .pdf
+    # save the pdf
     pdf.output("Swack.pdf")
 
 
