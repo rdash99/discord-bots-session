@@ -15,10 +15,10 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
     # channel id for the sandbox channel
     channel = client.get_channel(519591466058907669)
-    await channel.send('This is sent every time the bot is started, sorry if it gets annoying during testing :)')
-    await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
-    await channel.send('Please do not send any messages which contain custom emojis as this can cause issues when generating the output pdf')
-    await channel.send('Only your first message will end up in the output PDF, any other messages will be ignored')
+    # await channel.send('This is sent every time the bot is started, sorry if it gets annoying during testing :)')
+    # await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
+    # await channel.send('Please do not send any messages which contain custom emojis as this can cause issues when generating the output pdf')
+    # await channel.send('Only your first message will end up in the output PDF, any other messages will be ignored')
 
 
 @client.event
@@ -57,8 +57,8 @@ def log(message):
                       'timestamp': message.created_at}, ignore_index=True)
 
     # Remove emojis from the data
-    data = data.astype(str).apply(lambda x: x.str.encode(
-        'ascii', 'ignore').str.decode('ascii'))
+    data['content'] = data['content'].apply(lambda x: x.encode(
+        'ascii', 'ignore').decode('ascii'))
 
     # Remove double spaces from the data
     data['content'] = data['content'].str.replace(' {2,}', ' ', regex=True)
@@ -107,16 +107,19 @@ def processLog():
     outString = ""
     for i in range(len(authors)):
         outString += strings[i] + ". "
-        contributors += authors[i] + ", "
+        if i == len(authors)-1:
+            contributors += authors[i]
+        else:
+            contributors += authors[i] + ", "
     outString += " \n"
 
     # create a cell
     pdf.multi_cell(200, 10, txt=outString,
-                   align='L', border=0)
+                   align='L')
 
     # add another cell
     pdf.multi_cell(200, 10, txt=contributors,
-                   align='J')
+                   align='L')
 
     pdf.image(name='swan_hack_logo.png', w=25, h=25)
 
