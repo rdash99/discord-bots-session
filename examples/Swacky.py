@@ -44,7 +44,7 @@ async def on_message(message):
 
 def log(message):
     createFile()
-    data = pd.DataFrame(columns=['content', 'author', 'timestamp'])
+    data = pd.DataFrame(columns=['content', 'author', 'timestamp', 'id'])
     if message.content.startswith('$log'):
         print(message.content)
 
@@ -54,7 +54,7 @@ def log(message):
         pass
 
     data = df.append({'content': message.content, 'author': message.author.name,
-                      'timestamp': message.created_at}, ignore_index=True)
+                      'timestamp': message.created_at, 'id': message.author.id}, ignore_index=True)
 
     # Remove emojis from the messages only
     data['content'] = data['content'].apply(lambda x: x.encode(
@@ -77,9 +77,11 @@ def processLog():
 
     authors = []
     strings = []
+    ids = []
     # store the author and message content in a text file, each author is only allowed to have one message per day
     for i in range(len(df)):
-        if not authors.__contains__(df.iloc[i]['author']):
+        if not ids.__contains__(df.iloc[i]['id']):
+            ids.append(df.iloc[i]['id'])
             authors.append(df.iloc[i]['author'])
             strings.append(df.iloc[i]['content'])
 
