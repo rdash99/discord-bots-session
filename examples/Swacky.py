@@ -14,11 +14,11 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
     # channel id for the sandbox channel
     channel = client.get_channel(519591466058907669)
-    async with channel.typing():
-        await channel.send('Hello, I am Swacky!')
-        await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
-        await channel.send('Please do not send any messages which contain custom emojis as this can cause issues when generating the output pdf.')
-        await channel.send('Only your first message will end up in the output PDF, any other messages will be ignored.')
+    # async with channel.typing():
+    # await channel.send('Hello, I am Swacky!')
+    # await channel.send('Any messages sent in this channel after this message which are not from bots will be stored in a log file, this includes messages which are just a single emoji, or a single word.')
+    # await channel.send('Please do not send any messages which contain custom emojis as this can cause issues when generating the output pdf.')
+    # await channel.send('Only your first message will end up in the output PDF, any other messages will be ignored.')
 
 
 @client.event
@@ -53,7 +53,7 @@ def log(message):
     except:
         pass
 
-    data = df.append({'content': message.content, 'author': message.author.name,
+    data = df.append({'content': message.content, 'author': message.author.nick,
                       'timestamp': message.created_at, 'id': message.author.id}, ignore_index=True)
 
     # Remove emojis from the messages only
